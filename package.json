@@ -1,0 +1,21 @@
+{
+  "name": "vehicle-manager-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "tsc",
+    "start": "npm run compile && node ./dist/index.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.7.0",
+    "@prisma/client": "^4.13.0",
+    "graphql": "^16.6.0",
+    "moment": "^2.29.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.16.2",
+    "prisma": "^4.13.0",
+    "typescript": "^5.0.4"
+  }
+}

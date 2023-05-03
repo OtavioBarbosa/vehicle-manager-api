@@ -1,0 +1,396 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "mysql"
+    url      = env("DATABASE_URL")
+}
+
+model Address {
+    id          Int                    @id @default(autoincrement())
+    city_id     Int
+    postal_code String?
+    street      String?
+    district    String?
+    created_at  DateTime               @default(now())
+    updated_at  DateTime               @default(now())
+    deleted_at  DateTime?
+    city        City                   @relation(fields: [city_id], references: [id])
+    companies   Company_has_address[]
+    customers   Customer_has_address[]
+}
+
+model Body_type {
+    id         Int       @id @default(autoincrement())
+    body_type  String    @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    vehicles   Vehicle[]
+}
+
+model Brand {
+    id            Int                      @id @default(autoincrement())
+    brand         String                   @unique
+    created_at    DateTime                 @default(now())
+    updated_at    DateTime                 @default(now())
+    deleted_at    DateTime?
+    vehicle_types Vehicle_type_has_brand[]
+}
+
+model City {
+    id         Int       @id @default(autoincrement())
+    state_id   Int
+    city       String
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    state      State     @relation(fields: [state_id], references: [id])
+    addresses  Address[]
+}
+
+model Color {
+    id         Int       @id @default(autoincrement())
+    color      String    @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    vehicles   Vehicle[]
+}
+
+model Company {
+    id            Int                   @id @default(autoincrement())
+    social_reason String                @unique
+    register      String
+    fantasy_name  String?
+    created_at    DateTime              @default(now())
+    updated_at    DateTime              @default(now())
+    deleted_at    DateTime?
+    vehicles      Vehicle[]
+    phones        Company_has_phone[]
+    addresses     Company_has_address[]
+    users         Company_has_user[]
+}
+
+model Company_has_address {
+    id          Int       @id @default(autoincrement())
+    company_id  Int
+    address_id  Int
+    number      String?
+    complement  String?
+    description String?
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @default(now())
+    deleted_at  DateTime?
+    company     Company   @relation(fields: [company_id], references: [id])
+    address     Address   @relation(fields: [address_id], references: [id])
+}
+
+model Company_has_phone {
+    id          Int       @id @default(autoincrement())
+    company_id  Int
+    phone_id    Int
+    description String?
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @default(now())
+    deleted_at  DateTime?
+    company     Company   @relation(fields: [company_id], references: [id])
+    phone       Phone     @relation(fields: [phone_id], references: [id])
+}
+
+model Company_has_user {
+    id         Int       @id @default(autoincrement())
+    company_id Int
+    user_id    Int
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    company    Company   @relation(fields: [company_id], references: [id])
+    user       User      @relation(fields: [user_id], references: [id])
+}
+
+model Customer {
+    id         Int                    @id @default(autoincrement())
+    name       String                 @unique
+    register   String                 @unique
+    created_at DateTime               @default(now())
+    updated_at DateTime               @default(now())
+    deleted_at DateTime?
+    vehicles   Vehicle[]
+    phones     Customer_has_phone[]
+    addresses  Customer_has_address[]
+    users      Customer_has_user[]
+    sales      Sale[]
+}
+
+model Customer_has_address {
+    id          Int       @id @default(autoincrement())
+    customer_id Int
+    address_id  Int
+    number      String?
+    complement  String?
+    description String?
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @default(now())
+    deleted_at  DateTime?
+    customer    Customer  @relation(fields: [customer_id], references: [id])
+    address     Address   @relation(fields: [address_id], references: [id])
+}
+
+model Customer_has_phone {
+    id          Int       @id @default(autoincrement())
+    customer_id Int
+    phone_id    Int
+    description String?
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @default(now())
+    deleted_at  DateTime?
+    customer    Customer  @relation(fields: [customer_id], references: [id])
+    phone       Phone     @relation(fields: [phone_id], references: [id])
+}
+
+model Customer_has_user {
+    id          Int       @id @default(autoincrement())
+    customer_id Int
+    user_id     Int
+    created_at  DateTime  @default(now())
+    updated_at  DateTime  @default(now())
+    deleted_at  DateTime?
+    customer    Customer  @relation(fields: [customer_id], references: [id])
+    user        User      @relation(fields: [user_id], references: [id])
+}
+
+model Engine_capacity {
+    id              Int       @id @default(autoincrement())
+    engine_capacity Int       @unique
+    created_at      DateTime  @default(now())
+    updated_at      DateTime  @default(now())
+    deleted_at      DateTime?
+    vehicles        Vehicle[]
+}
+
+model Fuel_type {
+    id         Int       @id @default(autoincrement())
+    fuel_type  String    @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    vehicles   Vehicle[]
+}
+
+model Model {
+    id                        Int                    @id @default(autoincrement())
+    vehicle_type_has_brand_id Int
+    model                     Int
+    created_at                DateTime               @default(now())
+    updated_at                DateTime               @default(now())
+    deleted_at                DateTime?
+    vehicle_type_has_brand    Vehicle_type_has_brand @relation(fields: [vehicle_type_has_brand_id], references: [id])
+    versions                  Model_version[]
+    vehicles                  Vehicle[]
+}
+
+model Model_version {
+    id         Int       @id @default(autoincrement())
+    model_id   Int
+    version    Int       @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    model      Model     @relation(fields: [model_id], references: [id])
+    vehicles   Vehicle[]
+}
+
+model Permission {
+    id         Int                   @id @default(autoincrement())
+    permission String                @unique
+    created_at DateTime              @default(now())
+    updated_at DateTime              @default(now())
+    deleted_at DateTime?
+    users      User_has_permission[]
+}
+
+model Phone {
+    id            Int                  @id @default(autoincrement())
+    phone_type_id Int
+    ddd           String
+    phone         String               @unique
+    created_at    DateTime             @default(now())
+    updated_at    DateTime             @default(now())
+    deleted_at    DateTime?
+    type          Phone_type           @relation(fields: [phone_type_id], references: [id])
+    companies     Company_has_phone[]
+    customers     Customer_has_phone[]
+}
+
+model Phone_type {
+    id         Int       @id @default(autoincrement())
+    phone_type String    @unique
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    phones     Phone[]
+}
+
+model Sale {
+    id           Int       @id @default(autoincrement())
+    vehicle_id   Int
+    customer_id  Int
+    sale_type_id Int
+    created_at   DateTime  @default(now())
+    updated_at   DateTime  @default(now())
+    deleted_at   DateTime?
+    vehicle      Vehicle   @relation(fields: [vehicle_id], references: [id])
+    customer     Customer  @relation(fields: [customer_id], references: [id])
+    sale_type    Sale_type @relation(fields: [sale_type_id], references: [id])
+}
+
+model Sale_type {
+    id         Int       @id @default(autoincrement())
+    sale_type  String
+    created_at DateTime  @default(now())
+    updated_at DateTime  @default(now())
+    deleted_at DateTime?
+    sales      Sale[]
+}
+
+model State {
+    id     Int    @id @default(autoincrement())
+    state  String @unique
+    uf     String @unique
+    cities City[]
+}
+
+model Transmission {
+    id           Int       @id @default(autoincrement())
+    transmission String    @unique
+    created_at   DateTime  @default(now())
+    updated_at   DateTime  @default(now())
+    deleted_at   DateTime?
+    vehicles     Vehicle[]
+}
+
+model User {
+    id          Int                   @id @default(autoincrement())
+    email       String                @unique
+    password    String
+    created_at  DateTime              @default(now())
+    updated_at  DateTime              @default(now())
+    deleted_at  DateTime?
+    vehicle     Vehicle[]
+    permissions User_has_permission[]
+    companies   Company_has_user[]
+    customers   Customer_has_user[]
+}
+
+model User_has_permission {
+    id            Int        @id @default(autoincrement())
+    user_id       Int
+    permission_id Int
+    created_at    DateTime   @default(now())
+    updated_at    DateTime   @default(now())
+    deleted_at    DateTime?
+    user          User       @relation(fields: [user_id], references: [id])
+    permission    Permission @relation(fields: [permission_id], references: [id])
+}
+
+model Vehicle {
+    id                      Int                                  @id @default(autoincrement())
+    company_id              Int
+    model_id                Int
+    fuel_type_id            Int
+    engine_capacity_id      Int
+    transmission_id         Int
+    color_id                Int
+    body_type_id            Int
+    user_id                 Int
+    customer_id             Int?
+    model_version_id        Int?
+    description             String
+    year                    Int
+    km                      Int
+    abs                     Boolean
+    quantity_owners         Int?
+    cost_price              Decimal
+    selling_price           Decimal?
+    plate                   String
+    quantity_doors          Int?
+    created_at              DateTime                             @default(now())
+    updated_at              DateTime                             @default(now())
+    deleted_at              DateTime?
+    user                    User                                 @relation(fields: [user_id], references: [id])
+    model                   Model                                @relation(fields: [model_id], references: [id])
+    company                 Company                              @relation(fields: [company_id], references: [id])
+    fuel_type               Fuel_type                            @relation(fields: [fuel_type_id], references: [id])
+    engine_capacity         Engine_capacity                      @relation(fields: [engine_capacity_id], references: [id])
+    transmission            Transmission                         @relation(fields: [transmission_id], references: [id])
+    color                   Color                                @relation(fields: [color_id], references: [id])
+    body_type               Body_type                            @relation(fields: [body_type_id], references: [id])
+    customer                Customer?                            @relation(fields: [customer_id], references: [id])
+    model_version           Model_version?                       @relation(fields: [model_version_id], references: [id])
+    vehicle_characteristics Vehicle_has_vehicle_characteristic[]
+    vehicle_options         Vehicle_has_vehicle_option[]
+    sales                   Sale[]
+}
+
+model Vehicle_characteristic {
+    id                     Int                                  @id @default(autoincrement())
+    vehicle_characteristic String                               @unique
+    created_at             DateTime                             @default(now())
+    updated_at             DateTime                             @default(now())
+    deleted_at             DateTime?
+    vehicles               Vehicle_has_vehicle_characteristic[]
+}
+
+model Vehicle_has_vehicle_characteristic {
+    id                        Int                    @id @default(autoincrement())
+    vehicle_id                Int
+    vehicle_characteristic_id Int
+    created_at                DateTime               @default(now())
+    updated_at                DateTime               @default(now())
+    deleted_at                DateTime?
+    vehicle                   Vehicle                @relation(fields: [vehicle_id], references: [id])
+    vehicle_characteristic    Vehicle_characteristic @relation(fields: [vehicle_characteristic_id], references: [id])
+}
+
+model Vehicle_option {
+    id             Int                          @id @default(autoincrement())
+    vehicle_option String                       @unique
+    created_at     DateTime                     @default(now())
+    updated_at     DateTime                     @default(now())
+    deleted_at     DateTime?
+    vehicles       Vehicle_has_vehicle_option[]
+}
+
+model Vehicle_has_vehicle_option {
+    id                Int            @id @default(autoincrement())
+    vehicle_id        Int
+    vehicle_option_id Int
+    created_at        DateTime       @default(now())
+    updated_at        DateTime       @default(now())
+    deleted_at        DateTime?
+    vehicle           Vehicle        @relation(fields: [vehicle_id], references: [id])
+    vehicle_option    Vehicle_option @relation(fields: [vehicle_option_id], references: [id])
+}
+
+model Vehicle_type {
+    id           Int                      @id @default(autoincrement())
+    vehicle_type String                   @unique
+    created_at   DateTime                 @default(now())
+    updated_at   DateTime                 @default(now())
+    deleted_at   DateTime?
+    brands       Vehicle_type_has_brand[]
+}
+
+model Vehicle_type_has_brand {
+    id              Int          @id @default(autoincrement())
+    vehicle_type_id Int
+    brand_id        Int
+    created_at      DateTime     @default(now())
+    updated_at      DateTime     @default(now())
+    deleted_at      DateTime?
+    vehicle_type    Vehicle_type @relation(fields: [vehicle_type_id], references: [id])
+    brand           Brand        @relation(fields: [brand_id], references: [id])
+    models          Model[]
+}
