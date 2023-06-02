@@ -26,53 +26,56 @@ const vehicle = async (id: number) => {
 }
 
 const createVehicle = async (vehicle: VehicleProps) => {
-    return await prisma.vehicle.create({
-        data: {
-            vehicle: vehicle.vehicle,
-            user_id: vehicle.user_id,
-            types: {
-                create: vehicle.vehicle_types.map(type => {
-                    return {
-                        vehicle_type: {
-                            connectOrCreate: {
-                                where: {
-                                    vehicle_type: type.vehicle_type
-                                },
-                                create: {
-                                    vehicle_type: type.vehicle_type
-                                }
-                            }
-                        }
-                    }
-                })
-            }
-        }
-    })
+    return null
+    // return await prisma.vehicle.create({
+    //     data: {
+    //         vehicle: vehicle.vehicle,
+    //         user_id: vehicle.user_id,
+    //         types: {
+    //             create: vehicle.vehicle_types.map(type => {
+    //                 return {
+    //                     vehicle_type: {
+    //                         connectOrCreate: {
+    //                             where: {
+    //                                 vehicle_type: type.vehicle_type
+    //                             },
+    //                             create: {
+    //                                 vehicle_type: type.vehicle_type
+    //                             }
+    //                         }
+    //                     }
+    //                 }
+    //             })
+    //         }
+    //     }
+    // })
 }
 
 const updateVehicle = async (id: number, vehicle: VehicleProps) => {
-    return await prisma.vehicle.update({
-        where: {
-            id
-        },
-        data: {
-            vehicle: vehicle.vehicle,
-            user_id: vehicle.user_id,
-            updated_at: moment().format()
-        }
-    })
+    return null
+    // return await prisma.vehicle.update({
+    //     where: {
+    //         id
+    //     },
+    //     data: {
+    //         vehicle: vehicle.vehicle,
+    //         user_id: vehicle.user_id,
+    //         updated_at: moment().format()
+    //     }
+    // })
 }
 
 const vehicleTypes = async (id: number) => {
-    return await prisma.vehicle_type.findMany({
-        where: {
-            vehicles: {
-                some:{
-                    vehicle_id: id
-                }
-            }
-        }
-    })
+    return null
+    // return await prisma.vehicle_type.findMany({
+    //     where: {
+    //         vehicles: {
+    //             some:{
+    //                 vehicle_id: id
+    //             }
+    //         }
+    //     }
+    // })
 }
 
 export{

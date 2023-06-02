@@ -1,5 +1,6 @@
 const typeDefs = `#graphql
-    
+    scalar DateTime
+
     type Address {
         id:          Int         
         city_id:     Int
@@ -104,7 +105,7 @@ const typeDefs = `#graphql
     }
     
     type Customer {
-        id:         
+        id:         Int
         name:       String                 
         register:   String                 
         created_at: DateTime               
@@ -173,7 +174,7 @@ const typeDefs = `#graphql
     }
     
     type Model {
-        id:                        
+        id:                        Int
         vehicle_type_has_brand_id: Int
         model:                     Int
         created_at:                DateTime               
@@ -305,8 +306,8 @@ const typeDefs = `#graphql
         km:                      Int
         abs:                     Boolean
         quantity_owners:         Int
-        cost_price:              Decimal
-        selling_price:           Decimal
+        cost_price:              Float
+        selling_price:           Float
         plate:                   String
         quantity_doors:          Int
         created_at:              DateTime                             
@@ -337,7 +338,7 @@ const typeDefs = `#graphql
     }
     
     type VehicleHasVehicleCharacteristic {
-        id:                        
+        id:                        Int
         vehicle_id:                Int
         vehicle_characteristic_id: Int
         created_at:                DateTime               
@@ -386,13 +387,399 @@ const typeDefs = `#graphql
         vehicle_type:    VehicleType 
         brand:           Brand        
         models:          [Model]
-    }    
+    }   
+    
+    input fieldsAddress {
+        id:          Int         
+        city_id:     Int
+        postal_code: String
+        street:      String
+        district:    String
+        created_at:  DateTime               
+        updated_at:  DateTime               
+        deleted_at:  DateTime
+        city:        fieldsCity                   
+        companies:   [fieldsCompanyHasAddress]
+        customers:   [fieldsCustomerHasAddress]
+    }
+    
+    input fieldsBodyType {
+        id:         Int       
+        body_type:  String    
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        vehicles:   [fieldsVehicle]
+    }
+    
+    input fieldsBrand {
+        id:            Int                      
+        brand:         String                   
+        created_at:    DateTime                 
+        updated_at:    DateTime                 
+        deleted_at:    DateTime
+        vehicle_types: [fieldsVehicleTypeHasBrand]
+    }
+    
+    input fieldsCity {
+        id:         Int       
+        state_id:   Int
+        city:       String
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        state:      fieldsState     
+        addresses:  [fieldsAddress]
+    }
+    
+    input fieldsColor {
+        id:         Int       
+        color:      String    
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        vehicles:   [fieldsVehicle]
+    }
+    
+    input fieldsCompany {
+        id:            Int                   
+        social_reason: String                
+        register:      String
+        fantasy_name:  String
+        created_at:    DateTime              
+        updated_at:    DateTime              
+        deleted_at:    DateTime
+        vehicles:      [fieldsVehicle]
+        phones:        [fieldsCompanyHasPhone]
+        addresses:     [fieldsCompanyHasAddress]
+        users:         [fieldsCompanyHasUser]
+    }
+    
+    input fieldsCompanyHasAddress {
+        id:          Int       
+        company_id:  Int
+        address_id:  Int
+        number:      String
+        complement:  String
+        description: String
+        created_at:  DateTime  
+        updated_at:  DateTime  
+        deleted_at:  DateTime
+        company:     fieldsCompany   
+        address:     fieldsAddress   
+    }
+    
+    input fieldsCompanyHasPhone {
+        id:          Int       
+        company_id:  Int
+        phone_id:    Int
+        description: String
+        created_at:  DateTime  
+        updated_at:  DateTime  
+        deleted_at:  DateTime
+        company:     fieldsCompany   
+        phone:       fieldsPhone     
+    }
+    
+    input fieldsCompanyHasUser {
+        id:         Int       
+        company_id: Int
+        user_id:    Int
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        company:    fieldsCompany   
+        user:       fieldsUser      
+    }
+    
+    input fieldsCustomer {
+        id:         Int
+        name:       String                 
+        register:   String                 
+        created_at: DateTime               
+        updated_at: DateTime               
+        deleted_at: DateTime
+        vehicles:   [fieldsVehicle]
+        phones:     [fieldsCustomerHasPhone]
+        addresses:  [fieldsCustomerHasAddress]
+        users:      [fieldsCustomerHasUser]
+        sales:      [fieldsSale]
+    }
+    
+    input fieldsCustomerHasAddress {
+        id:          Int       
+        customer_id: Int
+        address_id:  Int
+        number:      String
+        complement:  String
+        description: String
+        created_at:  DateTime  
+        updated_at:  DateTime  
+        deleted_at:  DateTime
+        customer:    fieldsCustomer  
+        address:     fieldsAddress   
+    }
+    
+    input fieldsCustomerHasPhone {
+        id:          Int       
+        customer_id: Int
+        phone_id:    Int
+        description: String
+        created_at:  DateTime  
+        updated_at:  DateTime  
+        deleted_at:  DateTime
+        customer:    fieldsCustomer  
+        phone:       fieldsPhone     
+    }
+    
+    input fieldsCustomerHasUser {
+        id:          Int       
+        customer_id: Int
+        user_id:     Int
+        created_at:  DateTime  
+        updated_at:  DateTime  
+        deleted_at:  DateTime
+        customer:    fieldsCustomer  
+        user:        fieldsUser      
+    }
+    
+    input fieldsEngineCapacity {
+        id:              Int       
+        engine_capacity: Int       
+        created_at:      DateTime  
+        updated_at:      DateTime  
+        deleted_at:      DateTime
+        vehicles:        [fieldsVehicle]
+    }
+    
+    input fieldsFuelType {
+        id:         Int       
+        fuel_type:  String    
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        vehicles:   [fieldsVehicle]
+    }
+    
+    input fieldsModel {
+        id:                        Int
+        vehicle_type_has_brand_id: Int
+        model:                     Int
+        created_at:                DateTime               
+        updated_at:                DateTime               
+        deleted_at:                DateTime
+        vehicle_type_has_brand:    fieldsVehicleTypeHasBrand 
+        versions:                  [fieldsModelVersion]
+        vehicles:                  [fieldsVehicle]
+    }
+    
+    input fieldsModelVersion {
+        id:         Int       
+        model_id:   Int
+        version:    Int       
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        model:      fieldsModel     
+        vehicles:   [fieldsVehicle]
+    }
+    
+    input fieldsPermission {
+        id:         Int                   
+        permission: String                
+        created_at: DateTime              
+        updated_at: DateTime              
+        deleted_at: DateTime
+        users:      [fieldsUserHasPermission]
+    }
+    
+    input fieldsPhone {
+        id:            Int                  
+        phone_type_id: Int
+        ddd:           String
+        phone:         String               
+        created_at:    DateTime             
+        updated_at:    DateTime             
+        deleted_at:    DateTime
+        type:          fieldsPhoneType           
+        companies:     [fieldsCompanyHasPhone]
+        customers:     [fieldsCustomerHasPhone]
+    }
+    
+    input fieldsPhoneType {
+        id:         Int       
+        phone_type: String    
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        phones:     [fieldsPhone]
+    }
+    
+    input fieldsSale {
+        id:           Int       
+        vehicle_id:   Int
+        customer_id:  Int
+        sale_type_id: Int
+        created_at:   DateTime  
+        updated_at:   DateTime  
+        deleted_at:   DateTime
+        vehicle:      fieldsVehicle   
+        customer:     fieldsCustomer  
+        sale_type:    fieldsSaleType 
+    }
+    
+    input fieldsSaleType {
+        id:         Int       
+        sale_type:  String
+        created_at: DateTime  
+        updated_at: DateTime  
+        deleted_at: DateTime
+        sales:      [fieldsSale]
+    }
+    
+    input fieldsState {
+        id:     Int    
+        state:  String 
+        uf:     String 
+        cities: [fieldsCity]
+    }
+    
+    input fieldsTransmission {
+        id:           Int       
+        transmission: String    
+        created_at:   DateTime  
+        updated_at:   DateTime  
+        deleted_at:   DateTime
+        vehicles:     [fieldsVehicle]
+    }
+    
+    input fieldsUser {
+        id:          Int                   
+        email:       String                
+        password:    String
+        created_at:  DateTime              
+        updated_at:  DateTime              
+        deleted_at:  DateTime
+        vehicle:     [fieldsVehicle]
+        permissions: [fieldsUserHasPermission]
+        companies:   [fieldsCompanyHasUser]
+        customers:   [fieldsCustomerHasUser]
+    }
+    
+    input fieldsUserHasPermission {
+        id:            Int        
+        user_id:       Int
+        permission_id: Int
+        created_at:    DateTime   
+        updated_at:    DateTime   
+        deleted_at:    DateTime
+        user:          fieldsUser       
+        permission:    fieldsPermission 
+    }
+    
+    input fieldsVehicle {
+        id:                      Int                                  
+        company_id:              Int
+        model_id:                Int
+        fuel_type_id:            Int
+        engine_capacity_id:      Int
+        transmission_id:         Int
+        color_id:                Int
+        body_type_id:            Int
+        user_id:                 Int
+        customer_id:             Int
+        model_version_id:        Int
+        description:             String
+        year:                    Int
+        km:                      Int
+        abs:                     Boolean
+        quantity_owners:         Int
+        cost_price:              Float
+        selling_price:           Float
+        plate:                   String
+        quantity_doors:          Int
+        created_at:              DateTime                             
+        updated_at:              DateTime                             
+        deleted_at:              DateTime
+        user:                    fieldsUser                                 
+        model:                   fieldsModel                                
+        company:                 fieldsCompany                              
+        fuel_type:               fieldsFuelType                            
+        engine_capacity:         fieldsEngineCapacity                      
+        transmission:            fieldsTransmission                         
+        color:                   fieldsColor                                
+        body_type:               fieldsBodyType                            
+        customer:                fieldsCustomer                            
+        model_version:           fieldsModelVersion                       
+        vehicle_characteristics: [fieldsVehicleHasVehicleCharacteristic]
+        vehicle_options:         [fieldsVehicleHasVehicleOption]
+        sales:                   [fieldsSale]
+    }
+    
+    input fieldsVehicleCharacteristic {
+        id:                     Int                                  
+        vehicle_characteristic: String                               
+        created_at:             DateTime                             
+        updated_at:             DateTime                             
+        deleted_at:             DateTime
+        vehicles:               [fieldsVehicleHasVehicleCharacteristic]
+    }
+    
+    input fieldsVehicleHasVehicleCharacteristic {
+        id:                        Int
+        vehicle_id:                Int
+        vehicle_characteristic_id: Int
+        created_at:                DateTime               
+        updated_at:                DateTime               
+        deleted_at:                DateTime
+        vehicle:                   fieldsVehicle                
+        vehicle_characteristic:    fieldsVehicleCharacteristic 
+    }
+    
+    input fieldsVehicleOption {
+        id:             Int                          
+        vehicle_option: String                       
+        created_at:     DateTime                     
+        updated_at:     DateTime                     
+        deleted_at:     DateTime
+        vehicles:       [fieldsVehicleHasVehicleOption]
+    }
+    
+    input fieldsVehicleHasVehicleOption {
+        id:                Int            
+        vehicle_id:        Int
+        vehicle_option_id: Int
+        created_at:        DateTime       
+        updated_at:        DateTime       
+        deleted_at:        DateTime
+        vehicle:           fieldsVehicle        
+        vehicle_option:    fieldsVehicleOption 
+    }
+    
+    input fieldsVehicleType {
+        id:           Int                      
+        vehicle_type: String                   
+        created_at:   DateTime                 
+        updated_at:   DateTime                 
+        deleted_at:   DateTime
+        brands:       [fieldsVehicleTypeHasBrand]
+    }
+    
+    input fieldsVehicleTypeHasBrand {
+        id:              Int          
+        vehicle_type_id: Int
+        brand_id:        Int
+        created_at:      DateTime     
+        updated_at:      DateTime     
+        deleted_at:      DateTime
+        vehicle_type:    fieldsVehicleType 
+        brand:           fieldsBrand        
+        models:          [fieldsModel]
+    } 
 
     type Query {
-        vehicles: [Vehicle]
-        vehicle(id: Int!): Vehicle
-        vehicles_types: [VehicleType]
-        vehicle_type(id: Int!): VehicleType
+        states: [State]
+        state(id: Int!): State
     }
     
     type Mutation {
