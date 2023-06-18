@@ -778,6 +778,8 @@ const typeDefs = `#graphql
     } 
 
     type Query {
+        cities: [City]
+        city(id: Int!): City
         states: [State]
         state(id: Int!): State
     }
